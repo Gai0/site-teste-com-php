@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax com jQuary</title>
+
+    <!--jquary-->
+    <script src="jQuary.js"></script>
+
+    <script>
+    
+        //ao carregar a tabela sera exibida a tabela de cursos
+        selecionar();
+
+        //ao carregar os elementos
+        $(document).ready(function(){
+
+            //acao de botao cadastrar
+            $(":button").click(function(){
+                
+                //variaveis
+                var curso = $("#curso").val();
+                var valor = $("#valor").val();
+
+                //ajax
+                var dados = "curso="+curso+"&valor="+valor;
+                $.ajax({
+                        type:"POST",
+                        url:"php/cadastrar.php",
+                        data: dados,
+                        success(){
+                        selecionar();
+                        }
+                });
+            });
+
+            //acao do botao excluir
+            $(document).on("click", ".btnexcluir", function(){
+               alert($(this).attr("id"));
+            });
+
+
+        });
+
+            function selecionar(){
+            $.ajax({
+                type: "POST",
+                url:"php/selecionar.php",
+                success(obterdados){
+                    $("#tabela").html(obterdados);
+                }
+            })
+        };
+
+        //excluir dados
+        function excluir(codigo){
+            $.ajax({
+                type: "GET",
+                url: "php/excluir.php",
+                data: "codigo="+codigo,
+                success(){
+                    selecionar();
+                }
+            });
+
+
+        };
+
+
+    </script>
+    
+</head>
+<body>      
+    <!--formulario-->
+    <form>
+        <input type="text" placeholder="curso" id="curso">
+        <input type="number" placeholder="valor" id="valor">
+        <input type="button" value="cadastrar">
+    </form>
+    <div id="tabela"></div>
+</body>
+</html>
